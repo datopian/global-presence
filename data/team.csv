@@ -1,4 +1,4 @@
-username,full name,position,country,lng,lat
-anuveyatsu,Anuar Ustayev,Senior Software Engineer,Kazakhstan,76.889709,43.238949
-rufuspollock,Rufus Pollock,President,France,-0.580816,44.836151
-zelima,Irakli Mchedlishvili,Senior Software Engineer,Georgia,44.783333,41.716667
+username,fullname,position,country,lng,lat,avatar
+anuveyatsu,Anuar Ustayev,Senior Software Engineer,Kazakhstan,76.889709,43.238949,https://avatars.githubusercontent.com/u/17809581?v=4
+rufuspollock,Rufus Pollock,President,France,-0.580816,44.836151,https://avatars.githubusercontent.com/u/180658?v=4
+zelima,Irakli Mchedlishvili,Senior Software Engineer,Georgia,44.783333,41.716667,https://avatars.githubusercontent.com/u/15143785?v=4

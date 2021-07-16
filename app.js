@@ -18,7 +18,7 @@ import {load} from '@loaders.gl/core';
 import {CSVLoader} from '@loaders.gl/csv';
 
 // Data source
-const DATA_URL = 'https://raw.githubusercontent.com/visgl/deck.gl-data/master/examples/globe';
+const DATA_URL = 'https://raw.githubusercontent.com/datopian/global-presence/master/data/team.csv';
 
 const INITIAL_VIEW_STATE = {
   longitude: 0,
@@ -56,22 +56,19 @@ export default function App({data}) {
 
   const layer = new IconLayer({
     id: 'icon-layer',
-    data: octokit.orgs.listMembers({
-      org: 'datopian',
-    }).then(result => result.data),
+    data: data,
     // iconAtlas and iconMapping should not be provided
     // getIcon return an object which contains url to fetch icon of each data point
     getIcon: d => ({
-      url: d.avatar_url,
+      url: d.avatar,
       width: 128,
       height: 128,
       anchorY: 128
     }),
-    // icon size is based on data point's contributions, between 2 - 25
     getSize: 2,
     pickable: true,
     sizeScale: 15,
-    getPosition: d => d.coordinates
+    getPosition: d => [d.lng, d.lat]
   });
 
   return (
@@ -81,21 +78,15 @@ export default function App({data}) {
         initialViewState={INITIAL_VIEW_STATE}
         controller={true}
         layers={[backgroundLayers, layer]}
+        getTooltip={({object}) => object && `${object.fullname}\n${object.position}\nhttps://www.github.com/${object.username}\n${object.country}`} />;
       />
     </>
   );
 }
 
 export function renderToDOM(container) {
-  render(<App />, container);
-
-  async function loadData(dates) {
-    const data = [];
-    for (const date of dates) {
-      const url = `${DATA_URL}/${date}.csv`;
-      const flights = await load(url, CSVLoader, {csv: {skipEmptyLines: true}});
-      data.push({flights, date});
-      render(<App data={data} />, container);
-    }
-  }
+  load(DATA_URL, CSVLoader, {csv: {skipEmptyLines: true}})
+    .then((team) => {
+      render(<App data={team} />, container);
+    });
 }
