@@ -3,12 +3,12 @@ import {useState, useMemo, useCallback} from 'react';
 
 import {render} from 'react-dom';
 
-import { Octokit } from '@octokit/rest';
-const octokit = new Octokit();
 import DeckGL from '@deck.gl/react';
 import {
   COORDINATE_SYSTEM,
-  _GlobeView as GlobeView
+  _GlobeView as GlobeView,
+  LightingEffect,
+  AmbientLight
 } from '@deck.gl/core';
 import {GeoJsonLayer, IconLayer} from '@deck.gl/layers';
 import {SimpleMeshLayer} from '@deck.gl/mesh-layers';
@@ -23,10 +23,17 @@ const DATA_URL = 'https://raw.githubusercontent.com/datopian/global-presence/mas
 const INITIAL_VIEW_STATE = {
   longitude: 0,
   latitude: 20,
-  zoom: 0
+  zoom: 1
 };
 
 const EARTH_RADIUS_METERS = 6.3e6;
+
+const ambientLight = new AmbientLight({
+  color: [255, 255, 255],
+  intensity: 0.7
+});
+// create lighting effect with light sources
+const lightingEffect = new LightingEffect({ambientLight});
 
 /* eslint-disable react/no-deprecated */
 export default function App({data}) {
@@ -39,7 +46,7 @@ export default function App({data}) {
         mesh: new SphereGeometry({radius: EARTH_RADIUS_METERS, nlat: 18, nlong: 36}),
         coordinateSystem: COORDINATE_SYSTEM.CARTESIAN,
         getPosition: [0, 0, 0],
-        getColor: [255, 255, 255]
+        getColor: [49,49,56]
       }),
       new GeoJsonLayer({
         id: 'earth-land',
@@ -47,8 +54,8 @@ export default function App({data}) {
         // Styles
         stroked: false,
         filled: true,
-        opacity: 0.1,
-        getFillColor: [30, 80, 120]
+        opacity: 0.8,
+        getFillColor: [27,143,140]
       })
     ],
     []
@@ -77,6 +84,7 @@ export default function App({data}) {
         views={new GlobeView()}
         initialViewState={INITIAL_VIEW_STATE}
         controller={true}
+        effects={[lightingEffect]}
         layers={[backgroundLayers, layer]}
         getTooltip={({object}) => object && `${object.fullname}\n${object.position}\nhttps://www.github.com/${object.username}\n${object.country}`} />;
       />
