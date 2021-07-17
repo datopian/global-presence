@@ -3,6 +3,7 @@ import {useState, useMemo, useCallback} from 'react';
 
 import {render} from 'react-dom';
 
+import {GreatCircleLayer} from 'deck.gl';
 import DeckGL from '@deck.gl/react';
 import {
   COORDINATE_SYSTEM,
@@ -23,7 +24,7 @@ const DATA_URL = 'https://raw.githubusercontent.com/datopian/global-presence/mas
 const INITIAL_VIEW_STATE = {
   longitude: 0,
   latitude: 20,
-  zoom: 1
+  zoom: 0.5
 };
 
 const EARTH_RADIUS_METERS = 6.3e6;
@@ -61,9 +62,9 @@ export default function App({data}) {
     []
   );
 
-  const layer = new IconLayer({
+  const iconLayer = new IconLayer({
     id: 'icon-layer',
-    data: data,
+    data,
     // iconAtlas and iconMapping should not be provided
     // getIcon return an object which contains url to fetch icon of each data point
     getIcon: d => ({
@@ -78,6 +79,26 @@ export default function App({data}) {
     getPosition: d => [d.lng, d.lat]
   });
 
+  const arcsData = data.flatMap(
+    (v, i) => data.slice(i+1).map(w => {
+      return {
+        from: [v.lng, v.lat],
+        to: [w.lng, w.lat]
+      }
+    })
+  );
+
+  const arcLayer = new GreatCircleLayer({
+    id: 'arc-layer',
+    data: arcsData,
+    pickable: false,
+    getWidth: 0.5,
+    getSourcePosition: d => d.from,
+    getTargetPosition: d => d.to,
+    getSourceColor: [239,158,86],
+    getTargetColor: [239,158,86]
+  });
+
   return (
     <>
       <DeckGL
@@ -85,9 +106,11 @@ export default function App({data}) {
         initialViewState={INITIAL_VIEW_STATE}
         controller={true}
         effects={[lightingEffect]}
-        layers={[backgroundLayers, layer]}
-        getTooltip={({object}) => object && `${object.fullname}\n${object.position}\nhttps://www.github.com/${object.username}\n${object.country}`} />;
-      />
+        layers={[backgroundLayers, iconLayer, arcLayer]}
+        getTooltip={
+          ({object}) => object && `${object.fullname}\n${object.position}\nhttps://www.github.com/${object.username}\n${object.country}`
+        }
+      />;
     </>
   );
 }
