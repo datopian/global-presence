@@ -19,7 +19,7 @@ import {load} from '@loaders.gl/core';
 import {CSVLoader} from '@loaders.gl/csv';
 
 // Data source
-const DATA_URL = 'https://raw.githubusercontent.com/datopian/global-presence/master/data/team.csv';
+const DATA_URL = 'https://raw.githubusercontent.com/datopian/global-presence/master/data/clients.csv';
 
 const INITIAL_VIEW_STATE = {
   longitude: 0,
@@ -28,6 +28,12 @@ const INITIAL_VIEW_STATE = {
 };
 
 const EARTH_RADIUS_METERS = 6.3e6;
+
+const DATOPIAN_LOCATIONS = [
+  {Name: 'Datopian', coordinates: [-75.500000, 39.000000], Country: 'USA'},
+  {Name: 'Datopian', coordinates: [-0.118092, 51.509865], Country: 'United Kingdom'},
+  {Name: 'Datopian', coordinates: [24.753574, 59.436962], Country: 'Estonia'}
+];
 
 const ambientLight = new AmbientLight({
   color: [255, 255, 255],
@@ -62,28 +68,41 @@ export default function App({data}) {
     []
   );
 
-  const iconLayer = new IconLayer({
-    id: 'icon-layer',
+  const clientsIconLayer = new IconLayer({
+    id: 'clients-icon-layer',
     data,
-    // iconAtlas and iconMapping should not be provided
-    // getIcon return an object which contains url to fetch icon of each data point
-    getIcon: d => ({
-      url: d.avatar,
-      width: 128,
-      height: 128,
-      anchorY: 128
-    }),
-    getSize: 2,
+    iconAtlas: 'https://raw.githubusercontent.com/visgl/deck.gl-data/master/website/icon-atlas.png',
+    iconMapping: {
+      marker: {x: 0, y: 0, width: 128, height: 128, mask: true}
+    },
+    getIcon: d => 'marker',
     pickable: true,
     sizeScale: 15,
-    getPosition: d => [d.lng, d.lat]
+    getPosition: d => [d.Longitude, d.Latitude],
+    getSize: d => 1,
+    getColor: d => [255,158,86]
+  });
+
+  const datopianIconLayer = new IconLayer({
+    id: 'datopian-icon-layer',
+    data: DATOPIAN_LOCATIONS,
+    iconAtlas: 'https://raw.githubusercontent.com/visgl/deck.gl-data/master/website/icon-atlas.png',
+    iconMapping: {
+      marker: {x: 0, y: 0, width: 128, height: 128, mask: true}
+    },
+    getIcon: d => 'marker',
+    pickable: true,
+    sizeScale: 15,
+    getPosition: d => d.coordinates,
+    getSize: d => 2,
+    getColor: d => [149,176,196]
   });
 
   const arcsData = data.flatMap(
-    (v, i) => data.slice(i+1).map(w => {
+    (v) => DATOPIAN_LOCATIONS.map(w => {
       return {
-        from: [v.lng, v.lat],
-        to: [w.lng, w.lat]
+        from: [v.Longitude, v.Latitude],
+        to: w.coordinates
       }
     })
   );
@@ -102,13 +121,13 @@ export default function App({data}) {
   return (
     <>
       <DeckGL
-        views={new GlobeView()}
+        views={new GlobeView({keyboard: true, inertia: true})}
         initialViewState={INITIAL_VIEW_STATE}
         controller={true}
         effects={[lightingEffect]}
-        layers={[backgroundLayers, iconLayer, arcLayer]}
+        layers={[backgroundLayers, clientsIconLayer, datopianIconLayer, arcLayer]}
         getTooltip={
-          ({object}) => object && `${object.fullname}\n${object.position}\nhttps://www.github.com/${object.username}\n${object.country}`
+          ({object}) => object && `${object.Name}\n${object.Country}\n${object.Sector || ''}`
         }
       />;
     </>
