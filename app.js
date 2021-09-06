@@ -28,7 +28,7 @@ const INITIAL_VIEW_STATE = {
 const EARTH_RADIUS_METERS = 6.3e6;
 
 const DATOPIAN_LOCATIONS = [
-  {Name: 'Datopian', coordinates: [-75.500000, 39.000000], Country: 'USA'},
+  {Name: 'Datopian', coordinates: [-122.25846741601838, 37.52372710642201], Country: 'USA'},
   {Name: 'Datopian', coordinates: [-0.118092, 51.509865], Country: 'United Kingdom'}
 ];
 
