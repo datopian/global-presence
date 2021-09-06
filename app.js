@@ -35,6 +35,7 @@ const DATOPIAN_LOCATIONS = [
 /* eslint-disable react/no-deprecated */
 export default function App({data}) {
   const [viewState, setViewState] = useState(INITIAL_VIEW_STATE);
+  const [intervalID, setIntervalID] = useState(null);
 
   useEffect(() => {
     const newViewState = {
@@ -42,11 +43,11 @@ export default function App({data}) {
       latitude: 40,
       zoom: 0.5
     }
-    const interval = setInterval(() => {
+    setIntervalID(setInterval(() => {
       setViewState(newViewState);
-    }, 50);
+    }, 50));
     return () => {
-      clearInterval(interval);
+      clearInterval(intervalID);
     };
   }, [viewState]);
 
@@ -129,6 +130,19 @@ export default function App({data}) {
         views={new GlobeView({keyboard: true, inertia: true})}
         viewState={viewState}
         controller={true}
+        onClick={() => {
+          if (intervalID) {
+            clearInterval(intervalID);
+            setIntervalID(null);
+          } else {
+            const newViewState = {
+              longitude: viewState.longitude - 0.2,
+              latitude: 40,
+              zoom: 0.5
+            };
+            setViewState(newViewState);
+          }
+        }}
         layers={[backgroundLayers, clientsIconLayer, datopianIconLayer, arcLayer]}
         getTooltip={
           ({object}) => object && `${object.Name}\n${object.Country}\n${object.Sector || ''}`
