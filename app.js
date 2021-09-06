@@ -38,7 +38,7 @@ export default function App({data}) {
 
   useEffect(() => {
     const newViewState = {
-      longitude: viewState.longitude - 0.1,
+      longitude: viewState.longitude - 0.2,
       latitude: 40,
       zoom: 0.5
     }
