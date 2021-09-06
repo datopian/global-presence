@@ -145,7 +145,13 @@ export default function App({data}) {
         }}
         layers={[backgroundLayers, clientsIconLayer, datopianIconLayer, arcLayer]}
         getTooltip={
-          ({object}) => object && `${object.Name}\n${object.Country}\n${object.Sector || ''}`
+          ({object}) => object && {
+            html: `<h3>${object.Name}</h3>${object.Country}<br />${object.Sector}`,
+            style: {
+              backgroundColor: '#fff',
+              fontSize: '0.8em'
+            }
+          }
         }
       />;
     </>
