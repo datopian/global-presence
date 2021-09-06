@@ -7,9 +7,7 @@ import {GreatCircleLayer} from 'deck.gl';
 import DeckGL from '@deck.gl/react';
 import {
   COORDINATE_SYSTEM,
-  _GlobeView as GlobeView,
-  LightingEffect,
-  AmbientLight
+  _GlobeView as GlobeView
 } from '@deck.gl/core';
 import {GeoJsonLayer, IconLayer} from '@deck.gl/layers';
 import {SimpleMeshLayer} from '@deck.gl/mesh-layers';
@@ -33,13 +31,6 @@ const DATOPIAN_LOCATIONS = [
   {Name: 'Datopian', coordinates: [-75.500000, 39.000000], Country: 'USA'},
   {Name: 'Datopian', coordinates: [-0.118092, 51.509865], Country: 'United Kingdom'}
 ];
-
-const ambientLight = new AmbientLight({
-  color: [255, 255, 255],
-  intensity: 0.7
-});
-// create lighting effect with light sources
-const lightingEffect = new LightingEffect({ambientLight});
 
 /* eslint-disable react/no-deprecated */
 export default function App({data}) {
@@ -67,7 +58,7 @@ export default function App({data}) {
         mesh: new SphereGeometry({radius: EARTH_RADIUS_METERS, nlat: 18, nlong: 36}),
         coordinateSystem: COORDINATE_SYSTEM.CARTESIAN,
         getPosition: [0, 0, 0],
-        getColor: [49,49,56]
+        getColor: [149,176,196]
       }),
       new GeoJsonLayer({
         id: 'earth-land',
@@ -76,7 +67,7 @@ export default function App({data}) {
         stroked: false,
         filled: true,
         opacity: 0.8,
-        getFillColor: [27,143,140]
+        getFillColor: [250,250,250]
       })
     ],
     []
@@ -109,7 +100,7 @@ export default function App({data}) {
     sizeScale: 15,
     getPosition: d => d.coordinates,
     getSize: d => 2,
-    getColor: d => [149,176,196]
+    getColor: d => [27,143,140]
   });
 
   const arcsData = data.flatMap(
@@ -138,7 +129,6 @@ export default function App({data}) {
         views={new GlobeView({keyboard: true, inertia: true})}
         viewState={viewState}
         controller={true}
-        effects={[lightingEffect]}
         layers={[backgroundLayers, clientsIconLayer, datopianIconLayer, arcLayer]}
         getTooltip={
           ({object}) => object && `${object.Name}\n${object.Country}\n${object.Sector || ''}`
