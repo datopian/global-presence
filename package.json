@@ -6,7 +6,7 @@
   "scripts": {
     "predeploy": "yarn build",
     "deploy": "gh-pages -d dist",
-    "build": "webpack",
+    "build": "webpack && cp ./index.html ./dist/",
     "start-local": "webpack-dev-server --env.local --progress --hot --open",
     "start": "webpack-dev-server --progress --hot --open"
   },
