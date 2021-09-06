@@ -1,5 +1,5 @@
 import React from 'react';
-import {useState, useMemo, useCallback} from 'react';
+import {useState, useEffect, useMemo} from 'react';
 
 import {render} from 'react-dom';
 
@@ -22,8 +22,8 @@ import {CSVLoader} from '@loaders.gl/csv';
 const DATA_URL = 'https://raw.githubusercontent.com/datopian/global-presence/master/data/clients.csv';
 
 const INITIAL_VIEW_STATE = {
-  longitude: 0,
-  latitude: 20,
+  longitude: -10,
+  latitude: 40,
   zoom: 0.5
 };
 
@@ -31,8 +31,7 @@ const EARTH_RADIUS_METERS = 6.3e6;
 
 const DATOPIAN_LOCATIONS = [
   {Name: 'Datopian', coordinates: [-75.500000, 39.000000], Country: 'USA'},
-  {Name: 'Datopian', coordinates: [-0.118092, 51.509865], Country: 'United Kingdom'},
-  {Name: 'Datopian', coordinates: [24.753574, 59.436962], Country: 'Estonia'}
+  {Name: 'Datopian', coordinates: [-0.118092, 51.509865], Country: 'United Kingdom'}
 ];
 
 const ambientLight = new AmbientLight({
@@ -44,6 +43,21 @@ const lightingEffect = new LightingEffect({ambientLight});
 
 /* eslint-disable react/no-deprecated */
 export default function App({data}) {
+  const [viewState, setViewState] = useState(INITIAL_VIEW_STATE);
+
+  useEffect(() => {
+    const newViewState = {
+      longitude: viewState.longitude - 0.1,
+      latitude: 40,
+      zoom: 0.5
+    }
+    const interval = setInterval(() => {
+      setViewState(newViewState);
+    }, 50);
+    return () => {
+      clearInterval(interval);
+    };
+  }, [viewState]);
 
   const backgroundLayers = useMemo(
     () => [
@@ -79,7 +93,7 @@ export default function App({data}) {
     pickable: true,
     sizeScale: 15,
     getPosition: d => [d.Longitude, d.Latitude],
-    getSize: d => 1,
+    getSize: d => 1.5,
     getColor: d => [255,158,86]
   });
 
@@ -122,7 +136,7 @@ export default function App({data}) {
     <>
       <DeckGL
         views={new GlobeView({keyboard: true, inertia: true})}
-        initialViewState={INITIAL_VIEW_STATE}
+        viewState={viewState}
         controller={true}
         effects={[lightingEffect]}
         layers={[backgroundLayers, clientsIconLayer, datopianIconLayer, arcLayer]}
