@@ -39,13 +39,13 @@ export default function App({data}) {
 
   useEffect(() => {
     const newViewState = {
-      longitude: viewState.longitude - 0.3,
+      longitude: viewState.longitude - 0.1,
       latitude: 40,
       zoom: 0.5
     }
     setIntervalID(setInterval(() => {
       setViewState(newViewState);
-    }, 50));
+    }, 20));
     return () => {
       clearInterval(intervalID);
     };
@@ -119,12 +119,14 @@ export default function App({data}) {
   });
 
   const arcsData = data.flatMap(
-    (v) => DATOPIAN_LOCATIONS.map(w => {
+    (v) => {
+      // Connect US based clients with Datopian's US entity, while all other clients connect to the UK entity.
+      let relevantDatopianLocation = v.Longitude > -50 ? DATOPIAN_LOCATIONS[1] : DATOPIAN_LOCATIONS[0];
       return {
         from: [v.Longitude, v.Latitude],
-        to: w.coordinates
+        to: relevantDatopianLocation.coordinates
       }
-    })
+    }
   );
 
   const arcLayer = new GreatCircleLayer({
@@ -144,7 +146,7 @@ export default function App({data}) {
       setIntervalID(null);
     } else {
       const newViewState = {
-        longitude: viewState.longitude - 0.2,
+        longitude: viewState.longitude - 0.1,
         latitude: 40,
         zoom: 0.5
       };
