@@ -77,7 +77,7 @@ export default function App({data}) {
   const clientsIconLayer = new IconLayer({
     id: 'clients-icon-layer',
     data,
-    iconAtlas: 'https://raw.githubusercontent.com/visgl/deck.gl-data/master/website/icon-atlas.png',
+    iconAtlas: 'https://raw.githubusercontent.com/datopian/global-presence/master/img/icon.svg',
     iconMapping: {
       marker: {x: 0, y: 0, width: 128, height: 128, mask: true}
     },
