@@ -39,7 +39,7 @@ export default function App({data}) {
 
   useEffect(() => {
     const newViewState = {
-      longitude: viewState.longitude - 0.2,
+      longitude: viewState.longitude - 0.3,
       latitude: 40,
       zoom: 0.5
     }
@@ -124,25 +124,28 @@ export default function App({data}) {
     getTargetColor: [239,158,86]
   });
 
+  const stopOrSpin = () => {
+    if (intervalID) {
+      clearInterval(intervalID);
+      setIntervalID(null);
+    } else {
+      const newViewState = {
+        longitude: viewState.longitude - 0.2,
+        latitude: 40,
+        zoom: 0.5
+      };
+      setViewState(newViewState);
+    }
+  };
+
   return (
     <>
       <DeckGL
         views={new GlobeView({keyboard: true, inertia: true})}
         viewState={viewState}
         controller={true}
-        onClick={() => {
-          if (intervalID) {
-            clearInterval(intervalID);
-            setIntervalID(null);
-          } else {
-            const newViewState = {
-              longitude: viewState.longitude - 0.2,
-              latitude: 40,
-              zoom: 0.5
-            };
-            setViewState(newViewState);
-          }
-        }}
+        onClick={stopOrSpin}
+        onDrag={stopOrSpin}
         layers={[backgroundLayers, clientsIconLayer, datopianIconLayer, arcLayer]}
         getTooltip={
           ({object}) => object && {
