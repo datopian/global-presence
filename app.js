@@ -161,7 +161,6 @@ export default function App({data}) {
         viewState={viewState}
         controller={true}
         onClick={stopOrSpin}
-        onDrag={stopOrSpin}
         layers={[backgroundLayers, clientsIconLayer, datopianIconLayer, arcLayer]}
         getTooltip={
           ({object}) => object && {
