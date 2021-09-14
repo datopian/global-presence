@@ -140,27 +140,12 @@ export default function App({data}) {
     getTargetColor: [239,158,86]
   });
 
-  const stopOrSpin = () => {
-    if (intervalID) {
-      clearInterval(intervalID);
-      setIntervalID(null);
-    } else {
-      const newViewState = {
-        longitude: viewState.longitude - 0.1,
-        latitude: 40,
-        zoom: 0.5
-      };
-      setViewState(newViewState);
-    }
-  };
-
   return (
     <>
       <DeckGL
         views={new GlobeView({keyboard: true, inertia: true})}
         viewState={viewState}
         controller={true}
-        onClick={stopOrSpin}
         layers={[backgroundLayers, clientsIconLayer, datopianIconLayer, arcLayer]}
         getTooltip={
           ({object}) => object && {
