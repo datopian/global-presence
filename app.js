@@ -77,7 +77,7 @@ export default function App({data}) {
   const clientsIconLayer = new IconLayer({
     id: 'clients-icon-layer',
     data,
-    iconAtlas: './img/icon.png',
+    iconAtlas: 'https://raw.githubusercontent.com/datopian/global-presence/master/img/icon.png',
     iconMapping: {
       marker: {x: 0, y: 0, width: 128, height: 128, mask: true}
     },
@@ -92,7 +92,7 @@ export default function App({data}) {
   const datopianIconLayer = new IconLayer({
     id: 'datopian-icon-layer',
     data: DATOPIAN_LOCATIONS,
-    iconAtlas: './img/icon.png',
+    iconAtlas: 'https://raw.githubusercontent.com/datopian/global-presence/master/img/icon.png',
     iconMapping: {
       marker: {x: 0, y: 0, width: 128, height: 128, mask: true}
     },
