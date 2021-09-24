@@ -59,7 +59,7 @@ export default function App({data}) {
         mesh: new SphereGeometry({radius: EARTH_RADIUS_METERS, nlat: 18, nlong: 36}),
         coordinateSystem: COORDINATE_SYSTEM.CARTESIAN,
         getPosition: [0, 0, 0],
-        getColor: [149,176,196]
+        getColor: [120,120,120]
       }),
       new GeoJsonLayer({
         id: 'earth-land',
